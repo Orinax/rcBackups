@@ -1,0 +1,105 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+syntax on
+let python_highlight_all=1
+set encoding=utf-8
+set nu
+
+" The link below helped me get this .vimrc file set up.
+" https://realpython.com/vim-and-python-a-match-made-in-heaven/#vim-extensions
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'micha/vim-colors-solarized'
+Plugin 'jnurmine/zenburn'
+Plugin 'indentpython.vim'
+Plugin 'tmhedberg/SimpylFold'
+" Plugin 'davidhalter/jedi-vim'
+Plugin 'codota/tabnine-vim'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'nvie/vim-flake8'
+Plugin 'scrooloose/nerdtree'
+
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+
+" Start NERDTree and leave the cursor in it.
+autocmd VimEnter * NERDTree
+
+" Exit Vim if NERDTree is the only window remaining in the only tab.
+autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+
+"split navigations
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+
+" Code Folding
+" Enable folding
+set foldmethod=indent
+set foldlevel=99
+
+" Enable folding with the spacebar
+nnoremap <space> za
+
+
+" logic to define which scheme to use based upon the VIM mode
+if has('gui_running')
+  set background=dark
+  colorscheme solarized
+else
+  colorscheme zenburn
+endif
+
+
+" PEP 8
+au BufNewFile,BufRead *.py
+    \ set tabstop=4 |
+    \ set softtabstop=4 |
+    \ set shiftwidth=4 |
+    \ set textwidth=79 |
+    \ set expandtab |
+    \ set autoindent |
+    \ set fileformat=unix
+
+
+" For full stack development
+au BufNewFile,BufRead *.js, *.html, *.css
+    \ set tabstop=2
+    \ set softtabstop=2
+    \ set shiftwidth=2
+
+
+" Define BadWhitespace before using in a match
+:highlight BadWhitespace ctermbg=darkgreen guibg=lightgreen
+
+" Flag Unnecessary Whitespace
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
+
+
+" Initilize jedi
+let g:jedi#auto_initialization = 1
+let g:jedi#use_tabs_not_buffers = 1
